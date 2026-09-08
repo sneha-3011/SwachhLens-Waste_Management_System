@@ -22,7 +22,3 @@ Database:
 MySQL, Sequelize
 
 
-
-## Future Scope
-
-...
