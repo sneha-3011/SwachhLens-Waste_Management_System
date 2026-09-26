@@ -1,11 +1,17 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/database");
 
-const User = sequelize.define("User", {
+const Ward = sequelize.define("Ward", {
+
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
+    },
+
+    wardNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
 
     name: {
@@ -13,26 +19,9 @@ const User = sequelize.define("User", {
         allowNull: false
     },
 
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-
-    mobile_no: {
-        type: DataTypes.STRING,
+    description: {
+        type: DataTypes.TEXT,
         allowNull: true
-    },
-
-    role: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: "citizen"
     },
 
     status: {
@@ -41,11 +30,11 @@ const User = sequelize.define("User", {
         defaultValue: "Active"
     },
 
-    
-    profileImage:{
-        type:DataTypes.STRING,
-        allowNull: true
+    zoneId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
+
 });
 
-module.exports = User;
+module.exports = Ward;

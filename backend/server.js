@@ -13,7 +13,17 @@ const sendEmail = require("./utils/sendEmail");
 const notificationRoutes = require("./routes/notificationRoutes");
 const ComplaintStatusHistory = require("./models/ComplaintStatusHistory");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const userRoutes = require("./routes/userRoutes");
+const WasteCategory = require("./models/WasteCategory");
+const wasteCategoryRoutes = require("./routes/wasteCategoryRoutes");
 
+const Zone = require("./models/Zone");
+const Ward = require("./models/Ward");
+const zoneRoutes = require("./routes/zoneRoutes");
+const wardRoutes = require("./routes/wardRoutes");
+
+
+require("./models/zoneWardAssociation");
 const app = express();
 
 app.use(cors());
@@ -21,17 +31,13 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use(
-    "/uploads",
-    express.static(
-        path.join(__dirname, "uploads")
-    )
-);
+app.use("/api/waste-categories", wasteCategoryRoutes);
+app.use("/uploads",express.static(path.join(__dirname, "uploads")));
 
-app.use(
-    "/api/leaderboard",
-    leaderboardRoutes
-);
+app.use("/api/leaderboard",leaderboardRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/zones", zoneRoutes);
+app.use("/api/wards", wardRoutes);
 
 app.get("/", (req, res) => {
     res.json({

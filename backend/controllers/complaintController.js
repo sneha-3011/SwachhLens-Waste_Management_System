@@ -118,7 +118,10 @@ const getMyComplaints = async (req, res) => {
         const complaints = await Complaint.findAll({
             where: {
                 userId: req.user.id
-            }
+            },
+            order:[
+                ["id","ASC"]
+            ]
         });
 
         res.json({

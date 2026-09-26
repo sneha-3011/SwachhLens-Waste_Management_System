@@ -184,6 +184,74 @@ const getProfile = async (req, res) => {
     }
 
 };
+
+const updateProfile = async (req, res) => {
+
+    try {
+
+        const { name, email, mobile_no } = req.body;
+
+        const user = await User.findByPk(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        // Check whether email is already used by another user
+        if (email && email !== user.email) {
+
+            const existingUser = await User.findOne({
+                where: { email }
+            });
+
+            if (existingUser && existingUser.id !== user.id) {
+                return res.status(400).json({
+                    message: "Email is already registered"
+                });
+            }
+        }
+
+        // Update profile information
+        user.name = name || user.name;
+        user.email = email || user.email;
+        user.mobile_no = mobile_no || null;
+
+        await user.save();
+
+        res.status(200).json({
+
+            message: "Profile updated successfully",
+
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                mobile_no: user.mobile_no,
+                role: user.role,
+                profileImage: user.profileImage,
+                createdAt: user.createdAt
+            }
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Update Profile Error:",
+            error
+        );
+
+        res.status(500).json({
+            message: "Failed to update profile"
+        });
+
+    }
+
+};
+
+
 const updateProfileImage = async (req, res) => {
 
     try {
@@ -242,4 +310,9 @@ const updateProfileImage = async (req, res) => {
 
 };
 
-module.exports = { register, login, getProfile, updateProfileImage };
+module.exports = { 
+    register, 
+    login, 
+    getProfile,
+    updateProfile,
+    updateProfileImage };
