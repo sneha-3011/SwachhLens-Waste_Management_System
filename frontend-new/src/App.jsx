@@ -9,6 +9,7 @@ import MapView from "./pages/MapView";
 import Notifications from "./pages/Notifications";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import AdminProfile from "./pages/AdminProfile";
 
 import Home from "./pages/Home";
 
@@ -34,8 +35,10 @@ function App() {
                     element={<Login />}
                 />
 
-                
-
+                <Route
+                    path="/admin/profile"
+                    element={<AdminProfile />}
+                />
 
                 <Route
                     path="/admin"

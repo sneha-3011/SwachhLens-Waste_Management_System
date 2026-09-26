@@ -1,0 +1,496 @@
+/* =========================================
+   ADMIN PROFILE LAYOUT
+========================================= */
+
+.admin-profile-layout {
+    min-height: 100vh;
+    background: #f9fafb;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 40px;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        "Roboto",
+        sans-serif;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.admin-profile-main {
+    width: 100%;
+    max-width: 900px;
+}
+
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.admin-profile-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.admin-profile-topbar h2 {
+    margin: 0;
+
+    font-size: 28px;
+    font-weight: 700;
+
+    color: #263238;
+}
+
+.admin-profile-topbar p {
+    margin: 6px 0 0;
+
+    color: #78909c;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   PROFILE ICON
+========================================= */
+
+.admin-profile-user-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 24px;
+
+    background: #e8f5e9;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================
+   PROFILE CONTENT
+========================================= */
+
+.admin-profile-content {
+    width: 100%;
+}
+
+
+/* =========================================
+   PROFILE CARD
+========================================= */
+
+.admin-profile-card {
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 35px;
+
+    box-shadow:
+        0 4px 18px rgba(0, 0, 0, 0.07);
+
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   PROFILE AVATAR
+========================================= */
+
+.admin-profile-avatar {
+    width: 110px;
+    height: 110px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    background: #e8f5e9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 50px;
+
+    overflow: hidden;
+}
+
+.admin-profile-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* =========================================
+   NAME
+========================================= */
+
+.admin-profile-card h1 {
+    margin: 5px 0 5px;
+
+    font-size: 26px;
+    font-weight: 700;
+
+    color: #263238;
+}
+
+
+/* =========================================
+   ROLE
+========================================= */
+
+.admin-role {
+    display: block;
+
+    color: #78909c;
+
+    font-size: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.edit-profile-btn,
+.save-profile-btn,
+.cancel-profile-btn,
+.admin-logout-btn {
+
+    border: none;
+
+    padding: 10px 18px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin: 8px 5px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================
+   EDIT BUTTON
+========================================= */
+
+.edit-profile-btn {
+    background: #2e7d32;
+    color: #ffffff;
+}
+
+.edit-profile-btn:hover {
+    background: #1b5e20;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   SAVE BUTTON
+========================================= */
+
+.save-profile-btn {
+    background: #2e7d32;
+    color: #ffffff;
+}
+
+.save-profile-btn:hover {
+    background: #1b5e20;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   CANCEL BUTTON
+========================================= */
+
+.cancel-profile-btn {
+    background: #78909c;
+    color: #ffffff;
+}
+
+.cancel-profile-btn:hover {
+    background: #546e7a;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   LOGOUT BUTTON
+========================================= */
+
+.admin-logout-btn {
+    background: #c62828;
+    color: #ffffff;
+
+    margin-top: 18px;
+}
+
+.admin-logout-btn:hover {
+    background: #b71c1c;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
+   PROFILE DETAILS
+========================================= */
+
+.admin-profile-details {
+    margin-top: 25px;
+
+    text-align: left;
+
+    border-top: 1px solid #eceff1;
+
+    padding-top: 25px;
+}
+
+
+/* =========================================
+   EACH DETAIL
+========================================= */
+
+.profile-detail {
+    margin-bottom: 18px;
+}
+
+.profile-detail span {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    color: #78909c;
+
+    margin-bottom: 6px;
+}
+
+.profile-detail strong {
+    display: block;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #263238;
+
+    word-break: break-word;
+}
+
+
+/* =========================================
+   INPUT FIELDS
+========================================= */
+
+.profile-detail input {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #cfd8dc;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    color: #263238;
+
+    background: #ffffff;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.profile-detail input:focus {
+    border-color: #2e7d32;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(46, 125, 50, 0.1);
+}
+
+
+/* =========================================
+   PROFILE ACTIONS
+========================================= */
+
+.profile-actions {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 10px;
+}
+
+
+/* =========================================
+   LOADING
+========================================= */
+
+.admin-profile-loading {
+    width: 100%;
+
+    min-height: 300px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    color: #607d8b;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+    .admin-profile-layout {
+        padding: 25px 15px;
+    }
+
+    .admin-profile-topbar h2 {
+        font-size: 24px;
+    }
+
+    .admin-profile-topbar p {
+        font-size: 13px;
+    }
+
+    .admin-profile-card {
+        padding: 25px 20px;
+    }
+
+    .admin-profile-avatar {
+        width: 95px;
+        height: 95px;
+
+        font-size: 42px;
+    }
+
+    .admin-profile-card h1 {
+        font-size: 23px;
+    }
+}
+
+
+
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .admin-profile-layout {
+        padding: 20px 10px;
+    }
+
+    .admin-profile-topbar {
+        margin-bottom: 18px;
+    }
+
+    .admin-profile-topbar h2 {
+        font-size: 21px;
+    }
+
+    .admin-profile-topbar p {
+        font-size: 12px;
+    }
+
+    .admin-profile-user-icon {
+        width: 42px;
+        height: 42px;
+
+        font-size: 21px;
+    }
+
+    .admin-profile-card {
+        padding: 22px 16px;
+
+        border-radius: 12px;
+    }
+
+    .admin-profile-avatar {
+        width: 85px;
+        height: 85px;
+
+        font-size: 38px;
+    }
+
+    .admin-profile-card h1 {
+        font-size: 21px;
+    }
+
+    .profile-detail strong {
+        font-size: 15px;
+    }
+
+    .edit-profile-btn,
+    .save-profile-btn,
+    .cancel-profile-btn,
+    .admin-logout-btn {
+
+        padding: 9px 15px;
+
+        font-size: 13px;
+    }
+
+    .profile-actions {
+        flex-wrap: wrap;
+    }
+}
