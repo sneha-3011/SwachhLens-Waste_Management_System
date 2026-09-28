@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,39 +7,22 @@ function ComplaintDetails() {
 
     const { id } = useParams();
     const navigate = useNavigate();
-
     const [complaint, setComplaint] = useState(null);
     const [analyzing, setAnalyzing] = useState(false);
     const [history, setHistory] = useState([]);
     const [error, setError] = useState("");
     const [historyLoading, setHistoryLoading] = useState(true);
 
-
-    // ==========================================
-    // FETCH COMPLAINT + HISTORY
-    // ==========================================
-
     const fetchComplaint = async () => {
-
         try {
-
             setError("");
-
             const token = localStorage.getItem("token");
-
             if (!token) {
-
                 setError(
                     "You are not logged in. Please login again."
                 );
-
                 return;
             }
-
-
-            // ==================================
-            // FETCH COMPLAINT
-            // ==================================
 
             const response = await axios.get(
                 `http://localhost:5000/api/complaints/${id}`,
@@ -55,18 +37,10 @@ function ComplaintDetails() {
                 "COMPLAINT DETAILS:",
                 response.data
             );
-
             setComplaint(response.data);
 
-
-            // ==================================
-            // FETCH HISTORY
-            // ==================================
-
             try {
-
                 setHistoryLoading(true);
-
                 const historyResponse = await axios.get(
                     `http://localhost:5000/api/complaints/${id}/history`,
                     {
@@ -75,153 +49,99 @@ function ComplaintDetails() {
                         }
                     }
                 );
-
                 console.log(
                     "COMPLAINT HISTORY:",
                     historyResponse.data
                 );
-
                 setHistory(
                     historyResponse.data.history || []
                 );
-
             } catch (historyError) {
-
                 console.error(
                     "History Fetch Error:",
                     historyError.response?.data ||
                     historyError.message
                 );
-
                 setHistory([]);
-
             } finally {
-
                 setHistoryLoading(false);
-
             }
-
-
         } catch (error) {
-
             console.error(
                 "Complaint Details Error:",
                 error.response?.data ||
                 error.message
             );
-
-
             if (error.response?.status === 401) {
-
                 localStorage.removeItem("token");
-
                 setError(
                     "Your session has expired. Please login again."
                 );
-
             } else {
-
                 setError(
                     error.response?.data?.message ||
                     "Failed to load complaint"
                 );
-
             }
-
         }
-
     };
 
-
-    // ==========================================
-    // LOAD COMPLAINT
-    // ==========================================
-
     useEffect(() => {
-
         fetchComplaint();
-
     }, [id]);
 
-
-    // ==========================================
-    // AI ANALYSIS
-    // ==========================================
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/home");
+    };
 
     const analyzeComplaint = async () => {
-
         try {
-
             setAnalyzing(true);
-
-            const token =
-                localStorage.getItem("token");
-
-
+            const token = localStorage.getItem("token");
             const response = await axios.post(
-
                 `http://localhost:5000/api/complaints/${id}/analyze`,
-
                 {},
-
                 {
                     headers: {
                         Authorization:
                             `Bearer ${token}`
                     }
                 }
-
             );
-
 
             console.log(
                 "AI ANALYSIS:",
                 response.data
             );
 
-
-            const analysis =
-                response.data.analysis;
-
-
+            const analysis = response.data.analysis;
             setComplaint(previousComplaint => ({
-
                 ...previousComplaint,
-
                 wasteType:
                     analysis.wasteType,
-
                 wasteSize:
                     analysis.wasteSize,
-
                 priority:
                     analysis.priority,
-
                 aiConfidence:
                     analysis.aiConfidence
-
             }));
 
-
         } catch (error) {
-
             console.error(
                 "AI Analysis Error:",
                 error.response?.data ||
                 error.message
             );
 
-
             alert(
                 error.response?.data?.message ||
                 "AI analysis failed"
             );
 
-
         } finally {
-
             setAnalyzing(false);
-
         }
 
     };
@@ -234,15 +154,13 @@ function ComplaintDetails() {
     if (!complaint && !error) {
 
         return (
-
             <div className="complaint-container">
-
-                <h2>
-                    Loading complaint...
-                </h2>
-
+                <div className="complaint-card complaint-main-card">
+                    <h2>
+                        Loading complaint...
+                    </h2>
+                </div>
             </div>
-
         );
 
     }
@@ -258,31 +176,41 @@ function ComplaintDetails() {
 
             <div className="complaint-container">
 
-                <h2>
-                    Error
-                </h2>
+                <div className="complaint-card complaint-main-card">
 
-                <p>
-                    {error}
-                </p>
+                    <h2>
+                        Unable to Load Complaint
+                    </h2>
 
-                <button
-                    onClick={() =>
-                        navigate("/login")
-                    }
-                >
-                    Login Again
-                </button>
+                    <p>
+                        {error}
+                    </p>
 
-                {" "}
 
-                <button
-                    onClick={() =>
-                        navigate("/citizen")
-                    }
-                >
-                    Back to Dashboard
-                </button>
+                    <div className="complaint-error-actions">
+
+                        <button
+                            className="complaint-primary-btn"
+                            onClick={() =>
+                                navigate("/login")
+                            }
+                        >
+                            Login Again
+                        </button>
+
+
+                        <button
+                            className="complaint-secondary-btn"
+                            onClick={() =>
+                                navigate("/citizen")
+                            }
+                        >
+                            Back to Dashboard
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -315,78 +243,47 @@ function ComplaintDetails() {
 
 
     // ==========================================
-    // PROGRESS STATUS
+    // STATUS CLASS
     // ==========================================
 
-    const getProgressClass = (step) => {
+    const getStatusClass = () => {
 
-        const status =
-            currentStatus.replace(/\s/g, "");
-
-
-        // Pending active
-        if (
-            step === "Pending" &&
-            status === "pending"
-        ) {
-
-            return "step active";
-
+        if (currentStatus === "resolved") {
+            return "resolved";
         }
 
-
-        // In Progress active
-        if (
-            step === "In Progress" &&
-            (
-                status === "inprogress" ||
-                status === "assigned"
-            )
-        ) {
-
-            return "step active";
-
+        if (currentStatus === "pending") {
+            return "pending";
         }
 
-
-        // Resolved active
         if (
-            step === "Resolved" &&
-            status === "resolved"
+            currentStatus === "in progress" ||
+            currentStatus === "inprogress" ||
+            currentStatus === "assigned"
         ) {
-
-            return "step active";
-
+            return "in-progress";
         }
 
-
-        // Pending completed
-        if (
-            step === "Pending" &&
-            (
-                status === "inprogress" ||
-                status === "assigned" ||
-                status === "resolved"
-            )
-        ) {
-
-            return "step completed";
-
+        if (currentStatus === "rejected") {
+            return "rejected";
         }
 
+        return "pending";
 
-        // In Progress completed
-        if (
-            step === "In Progress" &&
-            status === "resolved"
-        ) {
+    };
 
-            return "step completed";
 
+    // ==========================================
+    // HISTORY STATUS CLASS
+    // ==========================================
+
+    const getHistoryClass = (index) => {
+
+        if (index === history.length - 1) {
+            return "history-item active";
         }
 
-
-        return "step";
+        return "history-item completed";
 
     };
 
@@ -396,460 +293,550 @@ function ComplaintDetails() {
     // ==========================================
 
     return (
+        <>
 
-        <div className="complaint-container">
-
-
-            {/* ==================================
-                TITLE
-            ================================== */}
-
-            <h1 className="complaint-title">
-
-                Complaint Details
-
-            </h1>
-
-
-            {/* ==================================
-                HEADER
-            ================================== */}
-
-            <div className="complaint-header">
-
-                <div className="complaint-info">
-
-                    <p>
-
-                        <strong>
-                            Complaint No:
-                        </strong>{" "}
-
-                        #{complaint.id}
-
-                    </p>
-
-
-                    <p>
-
-                        <strong>
-                            Current Status:
-                        </strong>{" "}
-
-                        <span
-                            className={
-                                currentStatus === "pending"
-                                    ? "status in-progress"
-                                    : currentStatus === "resolved"
-                                        ? "status"
-                                        : "status in-progress"
-                            }
-                            style={
-                                currentStatus === "resolved"
-                                    ? {
-                                        backgroundColor: "#5cb85c"
-                                    }
-                                    : undefined
-                            }
-                        >
-
-                            {complaint.status}
-
-                        </span>
-
-                    </p>
-
+            <header className="citizen-header">
+                <div
+                    className="citizen-logo"
+                    onClick={() => navigate("/citizen")}
+                >
+                    SwachhLens
                 </div>
+                <nav className="citizen-nav">
+                    <button
+                        onClick={() => navigate("/citizen")}
+                    >
+                        Dashboard
+                    </button>
+                    <button
+                        onClick={() => navigate("/citizen")}
+                    >
+                        My Complaints
+                    </button>
+                    <button
+                        onClick={handleLogout}
+                    >
+                        Logout
+                    </button>
 
+                </nav>
 
-                {/* ==================================
-                    PROGRESS BAR
-                ================================== */}
+            </header>
 
-                <div className="progress-bar">
+            <div className="complaint-container">
 
-                    {[
-                        "Pending",
-                        "In Progress",
-                        "Resolved"
-                    ].map((step) => (
+            <div className="complaint-page-header">
 
-                        <div
-                            key={step}
-                            className={
-                                getProgressClass(step)
-                            }
-                        >
+                <div className="complaint-page-header-left">
 
-                            {step}
-
-                        </div>
-
-                    ))}
-
+    
+                    <h2>
+                        Complaint Details
+                    </h2>
                 </div>
 
             </div>
 
 
-            {/* ==================================
-                BODY
-            ================================== */}
 
-            <div className="complaint-body">
+            {/* ==========================================
+                TWO COLUMN LAYOUT
+            ========================================== */}
 
-
-                {/* ==================================
-                    IMAGE
-                ================================== */}
-
-                <div className="complaint-image">
-
-                    <h3>
-                        Complaint Image
-                    </h3>
+            <div className="complaint-details-layout">
 
 
-                    {complaint.image ? (
+                {/* ======================================
+                    LEFT COLUMN
+                ====================================== */}
 
-                        <img
-                            src={`http://localhost:5000/uploads/${complaint.image}`}
-                            alt="Complaint"
-                        />
+                <div className="complaint-left-column">
 
-                    ) : (
 
-                        <p>
-                            No image available
-                        </p>
+                    {/* ==================================
+                        COMPLAINT INFORMATION
+                    ================================== */}
 
-                    )}
+                    <div className="complaint-card complaint-main-card">
+
+
+                        <div className="complaint-number">
+                            Complaint Number
+                        </div>
+
+
+                        <div className="complaint-number-value">
+                            #{complaint.id}
+                        </div>
+
+
+                        {/* CURRENT STATUS */}
+
+                        <div className="current-status-label">
+                            Current Status
+                        </div>
+
+
+                        <div
+                            className={`current-status ${getStatusClass()}`}
+                        >
+
+                            <span className="current-status-dot"></span>
+
+                            {complaint.status}
+
+                        </div>
+
+
+
+                        {/* ==================================
+                            IMAGE
+                        ================================== */}
+
+                        <div className="complaint-image-section">
+
+                            <div className="complaint-section-label">
+                                Complaint Image
+                            </div>
+
+
+                            <div className="complaint-image-wrapper">
+
+                                {complaint.image ? (
+
+                                    <img
+                                        src={`http://localhost:5000/uploads/${complaint.image}`}
+                                        alt="Complaint"
+                                    />
+
+                                ) : (
+
+                                    <div className="no-image">
+                                        No image available
+                                    </div>
+
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+
+                        {/* ==================================
+                            LOCATION
+                        ================================== */}
+
+                        <div className="complaint-location">
+
+                            <div className="complaint-section-label">
+                                Complaint Location
+                            </div>
+
+
+                            <div className="location-value">
+
+                                {complaint.locationName ||
+                                    "Location not available"}
+
+                            </div>
+
+
+                            {complaint.latitude &&
+                                complaint.longitude && (
+
+                                    <div className="location-coordinates">
+
+                                        {complaint.latitude},{" "}
+                                        {complaint.longitude}
+
+                                    </div>
+
+                                )}
+
+
+                            {/* MAP */}
+
+                            {complaint.latitude &&
+                                complaint.longitude ? (
+
+                                <iframe
+                                    title="Complaint Location"
+                                    src={`https://www.google.com/maps?q=${complaint.latitude},${complaint.longitude}&output=embed`}
+                                    className="complaint-map"
+                                    loading="lazy"
+                                />
+
+                            ) : (
+
+                                <div className="location-unavailable">
+                                    Location map not available
+                                </div>
+
+                            )}
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
-                {/* ==================================
-                    DETAILS
-                ================================== */}
 
-                <div className="complaint-details">
+                {/* ======================================
+                    RIGHT COLUMN
+                ====================================== */}
 
-
-                    {/* ==================================
-                        STATUS DESCRIPTION
-                    ================================== */}
-
-                    <h3>
-                        Current Status
-                    </h3>
-
-                    <p>
-
-                        <span
-                            className={
-                                currentStatus === "pending"
-                                    ? "status in-progress"
-                                    : currentStatus === "resolved"
-                                        ? "status"
-                                        : "status in-progress"
-                            }
-                            style={
-                                currentStatus === "resolved"
-                                    ? {
-                                        backgroundColor: "#5cb85c"
-                                    }
-                                    : undefined
-                            }
-                        >
-
-                            {complaint.status}
-
-                        </span>
-
-                    </p>
-
-
-                    <p>
-
-                        {currentStatus === "pending" &&
-                            "Your complaint has been submitted and is waiting for review."
-                        }
-
-                        {(currentStatus === "assigned" ||
-                            currentStatus === "in progress") &&
-
-                            "Your complaint is currently being handled by the concerned team."
-
-                        }
-
-                        {currentStatus === "resolved" &&
-
-                            "Your complaint has been successfully resolved."
-
-                        }
-
-                    </p>
+                <div className="complaint-right-column">
 
 
                     {/* ==================================
                         STATUS HISTORY
                     ================================== */}
 
-                    <h3>
-                        Status History
-                    </h3>
+                    <div className="complaint-card status-history-card">
+
+                        <h2 className="card-heading">
+                            Status History
+                        </h2>
 
 
-                    {historyLoading ? (
-
-                        <p>
-                            Loading status history...
+                        <p className="card-subheading">
+                            Track the progress of your complaint
                         </p>
 
-                    ) : history.length === 0 ? (
 
-                        <p>
-                            No status history available.
-                        </p>
+                        {historyLoading ? (
 
-                    ) : (
+                            <div className="history-loading">
+                                Loading status history...
+                            </div>
 
-                        <ul>
+                        ) : history.length === 0 ? (
 
-                            {history.map(
-                                (item, index) => (
+                            <div className="history-empty">
+                                No status history available.
+                            </div>
 
-                                    <li
-                                        key={
-                                            item.id ||
-                                            index
-                                        }
-                                    >
+                        ) : (
 
-                                        <strong>
-                                            {item.status}
-                                        </strong>
+                            <div className="status-history">
 
-                                        {" - "}
+                                {history.map(
+                                    (item, index) => (
 
-                                        {item.createdAt
-                                            ? new Date(
-                                                item.createdAt
-                                            ).toLocaleString()
-                                            : "Date unavailable"
-                                        }
+                                        <div
+                                            className={getHistoryClass(index)}
+                                            key={
+                                                item.id ||
+                                                index
+                                            }
+                                        >
 
-                                    </li>
 
-                                )
-                            )}
+                                            <span className="history-dot">
+                                            </span>
 
-                        </ul>
 
-                    )}
+                                            <div className="history-content">
+
+                                                <div className="history-status">
+
+                                                    {item.status}
+
+                                                </div>
+
+
+                                                <div className="history-date">
+
+                                                    {item.createdAt
+
+                                                        ? new Date(
+                                                            item.createdAt
+                                                        ).toLocaleString()
+
+                                                        : "Date unavailable"
+
+                                                    }
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    )
+                                )}
+
+                            </div>
+
+                        )}
+
+                    </div>
+
 
 
                     {/* ==================================
-                        COMMENT
+                        CITIZEN COMMENT
                     ================================== */}
 
-                    <h3>
-                        Citizen Comment
-                    </h3>
+                    <div className="complaint-card comment-card">
+
+                        <h2 className="card-heading">
+                            Citizen Comment
+                        </h2>
 
 
-                    <p>
+                        <div className="comment-box">
 
-                        {complaint.comment ||
-                            "No comment"}
+                            <p className="comment-text">
 
-                    </p>
+                                {complaint.comment ||
+                                    "No comment was provided for this complaint."}
 
+                            </p>
 
-                    {/* ==================================
-                        LOCATION
-                    ================================== */}
+                        </div>
 
-                    <h3>
-                        Complaint Location
-                    </h3>
+                    </div>
 
-
-                    {complaint.latitude &&
-                    complaint.longitude ? (
-
-                        <iframe
-                            title="Complaint Location"
-                            src={`https://www.google.com/maps?q=${complaint.latitude},${complaint.longitude}&output=embed`}
-                            className="map"
-                            loading="lazy"
-                        >
-                        </iframe>
-
-                    ) : (
-
-                        <p>
-                            Location not available
-                        </p>
-
-                    )}
 
 
                     {/* ==================================
                         AI ANALYSIS
                     ================================== */}
 
-                    <h3>
-                        AI Analysis
-                    </h3>
+                    <div className="complaint-card ai-analysis-card">
 
 
-                    <ul>
+                        <div className="ai-analysis-header">
 
-                        <li>
-                            <strong>
-                                Waste Type:
-                            </strong>{" "}
+                            <div>
 
-                            {complaint.wasteType ||
-                                "Not analyzed"}
+                                <h2 className="ai-analysis-title">
+                                    AI Analysis
+                                </h2>
 
-                        </li>
+                                <p className="ai-analysis-subtitle">
+                                    Automated analysis of the submitted complaint
+                                </p>
 
-
-                        <li>
-                            <strong>
-                                Waste Size:
-                            </strong>{" "}
-
-                            {complaint.wasteSize ||
-                                "Not analyzed"}
-
-                        </li>
+                            </div>
 
 
-                        <li>
-                            <strong>
-                                Priority:
-                            </strong>{" "}
+                            <span className="ai-analysis-badge">
+                                AI
+                            </span>
 
-                            {complaint.priority ||
-                                "Not analyzed"}
-
-                        </li>
+                        </div>
 
 
-                        <li>
-                            <strong>
-                                AI Confidence:
-                            </strong>{" "}
 
-                            {confidence}
-
-                        </li>
-
-                    </ul>
+                        <div className="ai-analysis-grid">
 
 
-                    {/* ==================================
-                        AI BUTTON
-                    ================================== */}
+                            {/* WASTE TYPE */}
 
-                    <button
-                        onClick={analyzeComplaint}
-                        disabled={
-                            analyzing ||
-                            !complaint.image
-                        }
-                    >
+                            <div className="ai-analysis-item">
 
-                        {analyzing
-                            ? "Analyzing..."
-                            : "Analyze Complaint"
-                        }
-
-                    </button>
+                                <span className="ai-analysis-item-label">
+                                    Waste Type
+                                </span>
 
 
-                    {!complaint.image && (
+                                <span className="ai-analysis-item-value">
 
-                        <p>
+                                    {complaint.wasteType ||
+                                        "Not analyzed"}
 
-                            AI analysis requires a
-                            complaint image.
+                                </span>
 
-                        </p>
-
-                    )}
+                            </div>
 
 
-                    {/* ==================================
-                        TIMESTAMPS
-                    ================================== */}
 
-                    <div className="timestamps">
+                            {/* WASTE SIZE */}
 
-                        <p>
+                            <div className="ai-analysis-item">
 
-                            <strong>
-                                Submitted On:
-                            </strong>{" "}
+                                <span className="ai-analysis-item-label">
+                                    Waste Size
+                                </span>
 
-                            {complaint.createdAt
 
-                                ? new Date(
-                                    complaint.createdAt
-                                ).toLocaleString()
+                                <span className="ai-analysis-item-value">
 
-                                : "N/A"
+                                    {complaint.wasteSize ||
+                                        "Not analyzed"}
 
+                                </span>
+
+                            </div>
+
+
+
+                            {/* PRIORITY */}
+
+                            <div className="ai-analysis-item">
+
+                                <span className="ai-analysis-item-label">
+                                    Priority
+                                </span>
+
+
+                                <span className="ai-analysis-item-value">
+
+                                    {complaint.priority ||
+                                        "Not analyzed"}
+
+                                </span>
+
+                            </div>
+
+
+
+                            {/* CONFIDENCE */}
+
+                            <div className="ai-analysis-item">
+
+                                <span className="ai-analysis-item-label">
+                                    AI Confidence
+                                </span>
+
+
+                                <span className="ai-analysis-item-value">
+
+                                    {confidence}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        {/* AI BUTTON */}
+
+                        <button
+                            className="ai-analysis-btn"
+                            onClick={analyzeComplaint}
+                            disabled={
+                                analyzing ||
+                                !complaint.image
+                            }
+                        >
+
+                            {analyzing
+                                ? "Analyzing..."
+                                : "Analyze Complaint"
                             }
 
-                        </p>
+                        </button>
 
 
-                        <p>
+                        {!complaint.image && (
 
-                            <strong>
-                                Last Updated:
-                            </strong>{" "}
+                            <p className="ai-analysis-note">
 
-                            {complaint.updatedAt
+                                AI analysis requires a complaint image.
 
-                                ? new Date(
-                                    complaint.updatedAt
-                                ).toLocaleString()
+                            </p>
 
-                                : "N/A"
-
-                            }
-
-                        </p>
+                        )}
 
                     </div>
-
-
-                    {/* ==================================
-                        BACK BUTTON
-                    ================================== */}
-
-                    <button
-                        onClick={() =>
-                            navigate("/citizen")
-                        }
-                    >
-
-                        ← Back to My Complaints
-
-                    </button>
-
 
                 </div>
 
             </div>
 
-        </div>
 
+
+            {/* ==========================================
+                BOTTOM INFORMATION
+            ========================================== */}
+
+            <div className="complaint-footer-info">
+
+
+                {/* SUBMITTED */}
+
+                <div className="complaint-date-card">
+
+                    <span className="complaint-date-label">
+                        Date Submitted
+                    </span>
+
+
+                    <span className="complaint-date-value">
+
+                        {complaint.createdAt
+
+                            ? new Date(
+                                complaint.createdAt
+                            ).toLocaleString()
+
+                            : "N/A"
+
+                        }
+
+                    </span>
+
+                </div>
+
+
+
+                {/* UPDATED */}
+
+                <div className="complaint-date-card">
+
+                    <span className="complaint-date-label">
+                        Last Updated
+                    </span>
+
+
+                    <span className="complaint-date-value">
+
+                        {complaint.updatedAt
+
+                            ? new Date(
+                                complaint.updatedAt
+                            ).toLocaleString()
+
+                            : "N/A"
+
+                        }
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            {/* ==========================================
+                BACK BUTTON
+            ========================================== */}
+
+            <div className="complaint-back-container">
+
+                <button
+                    className="complaint-back-btn"
+                    onClick={() =>
+                        navigate("/citizen")
+                    }
+                >
+                    Back to My Complaints
+                </button>
+
+            </div>
+
+
+        </div>
+</>
     );
 
 }

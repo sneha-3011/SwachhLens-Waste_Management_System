@@ -3341,20 +3341,12 @@ const renderAnalyticsAndReports = () => {
             ===================================== */}
 
             <div className="analytics-chart-card analytics-full-width">
-
                 <div className="analytics-chart-header">
-
                     <div>
                         <h2>
                             Waste Type Analysis
                         </h2>
-
-                        <p>
-                            Number of complaints for each waste category
-                        </p>
-
                     </div>
-
                 </div>
 
 
@@ -3399,143 +3391,14 @@ const renderAnalyticsAndReports = () => {
                             }
                         }}
                     />
-
-                </div>
-
-            </div>
-
-
-            {/* =====================================
-                STATUS BREAKDOWN
-            ===================================== */}
-
-            <div className="analytics-breakdown-grid">
-
-                <div className="analytics-breakdown-card">
-
-                    <h3>
-                        Complaint Status
-                    </h3>
-
-                    <div className="analytics-list">
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                Pending
-                            </span>
-
-                            <strong>
-                                {statusCounts.Pending}
-                            </strong>
-
-                        </div>
-
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                In Progress
-                            </span>
-
-                            <strong>
-                                {statusCounts["In Progress"]}
-                            </strong>
-
-                        </div>
-
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                Resolved
-                            </span>
-
-                            <strong>
-                                {statusCounts.Resolved}
-                            </strong>
-
-                        </div>
-
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                Rejected
-                            </span>
-
-                            <strong>
-                                {statusCounts.Rejected}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {/* PRIORITY BREAKDOWN */}
-
-                <div className="analytics-breakdown-card">
-
-                    <h3>
-                        Priority Breakdown
-                    </h3>
-
-                    <div className="analytics-list">
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                High Priority
-                            </span>
-
-                            <strong>
-                                {priorityCounts.High}
-                            </strong>
-
-                        </div>
-
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                Medium Priority
-                            </span>
-
-                            <strong>
-                                {priorityCounts.Medium}
-                            </strong>
-
-                        </div>
-
-
-                        <div className="analytics-list-row">
-
-                            <span>
-                                Low Priority
-                            </span>
-
-                            <strong>
-                                {priorityCounts.Low}
-                            </strong>
-
-                        </div>
-                </div>
                 </div>
             </div>
-
-
            
             <div className="analytics-report-card">
-
                 <div>
-
                     <h2>
                         Generate Complaint Report
                     </h2>
-
                     <p>
                         Download a PDF report containing
                         complaint statistics and complaint details.
@@ -3716,19 +3579,9 @@ const renderAIInsights = () => {
             <section className="ai-section">
 
                 <div className="ai-section-header">
-
-                    <div>
-
                         <h2>
                             AI Waste Classification
                         </h2>
-
-                        <p>
-                            Distribution of waste types identified
-                            from complaints
-                        </p>
-
-                    </div>
 
                 </div>
 
@@ -3816,20 +3669,11 @@ const renderAIInsights = () => {
             <section className="ai-section">
 
                 <div className="ai-section-header">
-
                     <div>
-
                         <h2>
                             AI-Generated Insights
                         </h2>
-
-                        <p>
-                            Observations based on complaint
-                            classification data
-                        </p>
-
                     </div>
-
                 </div>
 
 
@@ -3943,19 +3787,11 @@ const renderAIInsights = () => {
             <section className="ai-section">
 
                 <div className="ai-section-header">
-
                     <div>
-
                         <h2>
                             AI Classification Results
                         </h2>
-
-                        <p>
-                            Recent complaint classification results
-                        </p>
-
                     </div>
-
                 </div>
 
 

@@ -35,55 +35,74 @@ const analyzeComplaint = async (req, res) => {
         const imageBuffer = fs.readFileSync(imagePath);
 
         const prompt = `
-You are an AI waste management assistant.
+            You are an AI waste management assistant.
 
-Analyze this waste image and return ONLY valid JSON.
+            Analyze this waste image and return ONLY valid JSON.
 
-Classify the waste into ONE of these categories:
+            Classify the waste into ONE of these categories:
 
-- Overflowing Bin
-- Garbage Dump
-- Plastic Waste
-- Construction Debris
-- Organic Waste
-- E-Waste
-- Hazardous Waste
-- Drain Blockage
-- Mixed Waste
-- Other
+            - Overflowing Bin
+            - Garbage Dump
+            - Plastic Waste
+            - Construction Debris
+            - Organic Waste
+            - E-Waste
+            - Hazardous Waste
+            - Drain Blockage
+            - Mixed Waste
+            - Other
 
-Estimate the visible waste amount as:
+            Estimate the visible waste amount as:
 
-- Small
-- Medium
-- Large
-- Very Large
+            - Small
+            - Medium
+            - Large
+            - Very Large
 
-Also provide a confidence score between 0 and 1.
+            Also provide a confidence score between 0 and 1.
 
-Return exactly:
+            Return exactly:
 
-{
-  "wasteType": "Plastic Waste",
-  "wasteSize": "Medium",
-  "confidence": 0.85
-}
-`;
+            {
+            "wasteType": "Plastic Waste",
+            "wasteSize": "Medium",
+            "confidence": 0.85
+            }
+            `;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-3.6-flash",
-            contents: [
-                {
-                    inlineData: {
-                        mimeType: "image/jpeg",
-                        data: imageBuffer.toString("base64")
-                    }
-                },
-                {
-                    text: prompt
-                }
-            ]
-        });
+        let response;
+        for(let attempt=1;attenpt<=3;attempt++){
+            try{
+
+                 response = await ai.models.generateContent({
+                    model: "gemini-3.6-flash",
+                    contents: [
+                        {
+                            inlineData: {
+                                mimeType: "image/jpeg",
+                                data: imageBuffer.toString("base64")
+                            }
+                        },
+                        {
+                            text: prompt
+                        }
+                    ]
+                });
+                break;
+        }catch(error){
+            console.error('Gemini attemp ${attempt} failed:',
+                error.status,
+                error.message
+            );
+            if(error.status !== 503 || attempt === 3){
+                throw error;
+            }
+            await new Promise(resolve =>
+                setTimeout(resolve, attempt * 2000)
+            );
+        }
+    }
+
 
         let resultText = response.text.trim();
 
@@ -125,7 +144,7 @@ Return exactly:
             aiConfidence: result.confidence
         });
 
-        res.json({
+        return res.json({
             message: "AI analysis completed",
             analysis: {
                 wasteType: result.wasteType,
